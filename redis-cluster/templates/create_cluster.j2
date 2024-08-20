@@ -1,0 +1,9 @@
+#!/bin/bash
+expect << EOF
+spawn /data/redis-{{ redis_master_port }}/bin/redis-cli  --cluster create --cluster-replicas 0 -a {{ redis_password }} {% for host in groups['redis'] %} {{ host }}:{{ redis_master_port }}{% endfor %}
+
+expect "(type 'yes' to accept):"
+send "yes\r"
+expect eof;
+EOF
+

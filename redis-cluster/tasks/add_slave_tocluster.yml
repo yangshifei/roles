@@ -1,0 +1,9 @@
+- name: Copy add slave script
+  template:
+    src: add_slave.j2
+    dest: /tmp/add_slave.sh
+    mode: '0755'
+ 
+- name: EXEC Script
+  shell: /tmp/add_slave.sh
+

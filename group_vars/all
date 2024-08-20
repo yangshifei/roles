@@ -1,0 +1,4 @@
+# redis vars
+redis_master_port: 6370
+redis_slave_port: 6371
+redis_password: admin123

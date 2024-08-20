@@ -1,0 +1,16 @@
+[Unit]
+Description=Redis Slave Server
+After=network.target
+
+[Service]
+ExecStart=/data/redis-{{ redis_slave_port }}/bin/redis-server /data/redis-{{ redis_slave_port }}/redis.conf --supervised systemd
+ExecStop=/data/redis-{{ redis_slave_port }}/bin/redis-cli -a {{ redis_password }} -p {{ redis_slave_port }}  shutdown
+Restart=always
+RestartSec=30
+Type=notify
+RuntimeDirectoryMode=0755
+LimitNOFILE=10240
+
+[Install]
+WantedBy=multi-user.target
+

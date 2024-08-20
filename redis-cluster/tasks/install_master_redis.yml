@@ -1,0 +1,40 @@
+- name: Create mastaer Dir
+  file: 
+    path: "/data/redis-{{ redis_master_port }}/bin"
+    state: directory
+    mode: '0755'
+
+
+- name: Copy redis files 
+  copy: 
+    src: "{{ item }}"
+    dest: "/data/redis-{{ redis_master_port }}/bin"
+    mode: '0755'
+  with_fileglob:
+    - "../files/*"
+
+- name: Copy redis configuration file
+  template:
+    src: redis.conf.j2
+    dest: "/data/redis-{{ redis_master_port }}/redis.conf"
+    mode: '0644'
+  notify: Restart Redis Mster Server
+
+- name: Copy redis service script
+  template:
+    src: redis-master.j2
+    dest: "/etc/systemd/system/redis-{{ redis_master_port }}.service"
+    mode: '0644'
+
+- name: Start redis-master service
+  systemd:
+    name: "redis-{{ redis_master_port }}"
+    state: started
+    daemon_reload: yes
+    enabled: yes
+
+- name: Cheack port 
+  wait_for: 
+    port: "{{ redis_master_port }}"
+    state: started
+      

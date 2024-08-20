@@ -1,0 +1,12 @@
+- include: install_master_redis.yml
+  tags: redis_master 
+
+- include: create_cluster.yml
+  tags: init_redis_cluster
+
+- include: install_slave_redis.yml
+  tags: redis_slave
+
+
+- include: add_slave_tocluster.yml
+  tags: add_slave

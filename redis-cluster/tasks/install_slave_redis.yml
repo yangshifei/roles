@@ -1,0 +1,40 @@
+- name: Create redis Dir
+  file: 
+    path: "/data/redis-{{ redis_slave_port }}/bin"
+    state: directory
+    mode: '0755'
+
+
+- name: Copy redis files 
+  copy: 
+    src: "{{ item }}"
+    dest: "/data/redis-{{ redis_slave_port }}/bin"
+    mode: '0755'
+  with_fileglob:
+    - "../files/*"
+
+- name: Copy redis configuration file
+  template:
+    src: redis.conf_slave.j2
+    dest: "/data/redis-{{ redis_slave_port }}/redis.conf"
+    mode: '0644'
+  notify: Restart Redis Slave Server
+
+- name: Copy redis service script
+  template:
+    src: redis-slave.j2
+    dest: "/etc/systemd/system/redis-{{ redis_slave_port }}.service"
+    mode: '0644'
+
+- name: Start redis service
+  systemd:
+    name: "redis-{{ redis_slave_port }}"
+    state: started
+    daemon_reload: yes
+    enabled: yes
+
+- name: Cheack port 
+  wait_for: 
+    port: "{{ redis_slave_port }}"
+    state: started
+      

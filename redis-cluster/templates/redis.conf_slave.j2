@@ -1,0 +1,14 @@
+bind 0.0.0.0
+port {{ redis_slave_port }}
+protected-mode no
+daemonize yes
+dbfilename dump-{{ redis_slave_port }}.rdb
+pidfile /var/run/redis_{{ redis_slave_port }}.pid
+masterauth {{ redis_password }}
+requirepass {{ redis_password }}
+cluster-enabled yes
+cluster-config-file nodes-{{ redis_slave_port }}.conf
+cluster-node-timeout 15000
+cluster-require-full-coverage no
+
+

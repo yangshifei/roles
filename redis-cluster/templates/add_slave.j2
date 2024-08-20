@@ -1,0 +1,4 @@
+#!/bin/bash
+MASTERID=$(/data/redis-{{ redis_master_port }}/bin/redis-cli -c -p {{ redis_master_port }} -a {{ redis_password }} cluster nodes| grep {{ ansible_default_ipv4.address }}| awk '{print $1}')
+#echo $MASTERID
+/data/redis-{{ redis_master_port }}/bin/redis-cli --cluster add-node {{ ansible_default_ipv4.address }}:{{ redis_slave_port }} {{ ansible_default_ipv4.address }}:{{ redis_master_port }} --cluster-slave --cluster-master-id  $MASTERID -a {{ redis_password }} 

@@ -1,0 +1,9 @@
+- name: Restart Redis Mster Server
+  systemd:
+    name: "redis-{{ redis_master_port }}"
+    state: restarted     
+
+- name: Restart Redis Slave Server
+  systemd:
+    name: "redis-{{ redis_slave_port }}"
+    state: restarted
